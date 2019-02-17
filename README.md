@@ -1,4 +1,4 @@
-# Bitbucket Pipelines For Android Developement
+# Bitbucket Pipelines For Android Developement (Under construction)
 If you are looking for a Continuous Integration tool for your Android Project that hosted on Bitbucket, you should try Bitbucket Pipelines. It's free up to 5 users and gives 50 minutes build time per month.
 
 Enabling Pipelines is easy and all you need is a single YAML file and small adjustments based on the requirements on your project. Let's dive in!
@@ -60,6 +60,6 @@ script:
 ```
 If your project is big. Lots of code, lots of test classes to be run, than you may need extra memory on your pipeline. By default the Bitbucket Pipeline memory is limited. So in order to go with full potential, you can use `size: 2x` option. This will help. And the `script` part is where all the magic happen.
 
-# To be continued
+# To be continued...
 
 [mingc]: <https://github.com/mingchen/docker-android-build-box>
