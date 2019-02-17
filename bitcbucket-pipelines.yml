@@ -1,0 +1,19 @@
+image: mingc/android-build-box:latest
+
+pipelines:
+  default:
+  - step:
+      size: 2x
+      script:
+      - printf 'prod_alias=%s\nprod_password=%s\nprod_keystore=%s\nprod_keystore_password=%s\ndebug_alias=%s\ndebug_password=%s\ndebug_keystore=%s\ndebug_keystore_password=%s' $prod_alias $prod_password $prodKeyStore $prod_keystore_password $debug_alias $debug_password $debugKeyStore $debug_keystore_password > keystore.properties
+      - echo $DEBUG_KEYSTORE_BASE64 | base64 -d > $debugKeyStore
+      - cd app
+      - echo $PROD_KEYSTORE_BASE64 | base64 -d > $prodKeyStore
+      - cd ..
+      - chmod +x gradlew
+      - ./gradlew clean
+      - ./gradlew test --stacktrace
+      - ./gradlew assembleRelease --stacktrace
+      artifacts:
+      - app/build/outputs/apk/debug/release/*.apk
+      - app/build/outputs/apk/prod/release/*.apk
