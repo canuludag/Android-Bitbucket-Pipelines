@@ -82,5 +82,6 @@ Also another important thing is we are converting keystore files into base64 enc
 - echo $PROD_KEYSTORE_BASE64 | base64 -d > $prodKeyStore
 - cd ..
 ```
+And as you might guess, we are storing these Base64 encoded strings under Environment Variables section.
 
 [mingc]: <https://github.com/mingchen/docker-android-build-box>
