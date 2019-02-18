@@ -1,7 +1,7 @@
-# Bitbucket Pipelines For Android Developement (Under construction)
+# Bitbucket Pipelines For Android Developement
 If you are looking for a Continuous Integration tool for your Android Project that hosted on Bitbucket, you should try Bitbucket Pipelines. It's free up to 5 users and gives 50 minutes build time per month.
 
-Enabling Pipelines is easy and all you need is a single YAML file and small adjustments based on the requirements on your project. Let's dive in!
+Enabling Pipelines is easy. Just go to `Pipelines` tab on your repository and follow the steps to enable pipelines. You'll see all you need is a single YAML file and small adjustments based on the requirements on your project. Let's dive in!
 
 First of all you can find a sample YAML file on above repository. But I'll also paste the lines here and try to explain it in detail. 
 ```sh
@@ -58,8 +58,29 @@ default:
 size: 2x
 script:
 ```
-If your project is big. Lots of code, lots of test classes to be run, than you may need extra memory on your pipeline. By default the Bitbucket Pipeline memory is limited. So in order to go with full potential, you can use `size: 2x` option. This will help. And the `script` part is where all the magic happen.
+If your project is big. Lots of code, lots of test classes to be run, than you may need extra memory on your pipeline. By default the Bitbucket Pipeline memory is limited. So in order to go with full potential, you can use `size: 2x` option. This will help. And the `script` part is where all the magic happen. 
 
-# To be continued...
+Now, while our image is being created, all of the lines under script will run and setup our environment. Look at the `printf` command. As you can guess, it's writing the lines next to it into a file. In our case in `keystore.properties` file. But there are bunch of keywords that starts with `$` sign. So what are these? In order to understand that we need to learn about `Bitbucket Environment Variables`. All the keywords that starts with $ sign is one of your environment variable. And these variables are stored under safe Bitbucket servers. In order to create a variable, go to your repository settings and find `Repository variables` tab on the left. When you open this screen, you'll see `key-value` pair boxes.
+
+OK, go back to above YAML file and environment variables on it. As you can see, there are many variables that created on Bitbucket and used in this file. And most of them are about keystore file and credentials of it.
+```sh
+- printf 'prod_alias=%s\nprod_password=%s\nprod_keystore=%s\nprod_keystore_password=%s\ndebug_alias=%s\ndebug_password=%s\ndebug_keystore=%s\ndebug_keystore_password=%s' $prod_alias $prod_password $prodKeyStore $prod_keystore_password $debug_alias $debug_password $debugKeyStore $debug_keystore_password > keystore.properties
+```
+Pretty version of above text is like below:
+```
+prod_alias="prod_alias"
+prod_password="prod_password"
+...
+.
+```
+And our gradle file will read the variables from there.
+
+Also another important thing is we are converting keystore files into base64 encoded code on our local machine and write them into files on bitbucket pipelines. By doing this, without uploading the files into VCS, we can give it to pipelines on each run.
+```sh
+- echo $DEBUG_KEYSTORE_BASE64 | base64 -d > $debugKeyStore
+- cd app
+- echo $PROD_KEYSTORE_BASE64 | base64 -d > $prodKeyStore
+- cd ..
+```
 
 [mingc]: <https://github.com/mingchen/docker-android-build-box>
